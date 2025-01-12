@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:reel_box/models/movie_model.dart';
 import 'package:reel_box/services/movie_api_services.dart';
+import 'package:reel_box/views/shared/movie_details_view.dart';
 import 'package:reel_box/widgets/movie_list_card.dart';
 
 class HomeView extends StatefulWidget {
@@ -90,7 +91,18 @@ class _HomeViewState extends State<HomeView> {
                   );
                 }
 
-                return MovieListCard(movieModel: _popularMovieList[index]);
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: ((context) => MovieDetailsView(
+                            movieModel: _popularMovieList[index])),
+                      ),
+                    );
+                  },
+                  child: MovieListCard(movieModel: _popularMovieList[index]),
+                );
               },
             ),
           ),

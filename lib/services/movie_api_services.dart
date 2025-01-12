@@ -114,4 +114,88 @@ class MovieApiServices {
       return [];
     }
   }
+
+  //* Get Similar Movies by ID
+  Future<List<MovieModel>> getSimilarMovieListByID(int movieID) async {
+    try {
+      final response = await http.get(
+        headers: {
+          "accept": "application/json",
+          "Authorization": "Bearer $_apiAccessToken",
+        },
+        Uri.parse("${_baseUrl}movie/$movieID/similar?language=en-US&page=1"),
+      );
+      if (response.statusCode == 200) {
+        final jsonBody = jsonDecode(response.body);
+        final List<dynamic> resultsList = jsonBody["results"];
+
+        return resultsList
+            .map((element) => MovieModel.fromJson(element))
+            .toList();
+      } else {
+        log(response.statusCode.toString());
+        return [];
+      }
+    } catch (error) {
+      log(error.toString());
+      return [];
+    }
+  }
+
+  //* Get recommendad Movies by ID
+  Future<List<MovieModel>> getRecommendedMovieListByID(int movieID) async {
+    try {
+      final response = await http.get(
+        headers: {
+          "accept": "application/json",
+          "Authorization": "Bearer $_apiAccessToken",
+        },
+        Uri.parse(
+            "${_baseUrl}movie/$movieID/recommendations?language=en-US&page=1"),
+      );
+      if (response.statusCode == 200) {
+        final jsonBody = jsonDecode(response.body);
+        final List<dynamic> resultsList = jsonBody["results"];
+
+        return resultsList
+            .map((element) => MovieModel.fromJson(element))
+            .toList();
+      } else {
+        log(response.statusCode.toString());
+        return [];
+      }
+    } catch (error) {
+      log(error.toString());
+      return [];
+    }
+  }
+
+  //* Get Movie images by ID
+  Future<List<String>> getImageUrlListByID(int movieID) async {
+    try {
+      final response = await http.get(
+        headers: {
+          "accept": "application/json",
+          "Authorization": "Bearer $_apiAccessToken",
+        },
+        Uri.parse("${_baseUrl}movie/$movieID/images"),
+      );
+      if (response.statusCode == 200) {
+        final jsonBody = jsonDecode(response.body);
+        final List<dynamic> backdropList = jsonBody["backdrops"];
+
+        return backdropList
+            .take(10)
+            .map((element) =>
+                "https://image.tmdb.org/t/p/w500${element["file_path"]}")
+            .toList();
+      } else {
+        log(response.statusCode.toString());
+        return [];
+      }
+    } catch (error) {
+      log(error.toString());
+      return [];
+    }
+  }
 }
